@@ -1,0 +1,26 @@
+# pyenv-binary metadata
+version=3.14.7-ubuntu-24.04-x86_64
+os=Linux
+arch=x86_64
+platform=linux-x86_64
+distro=ubuntu 24.04
+libc=glibc 2.39
+build_prefix=/home/runner/work/pyenv/pyenv/versions/3.14.7-ubuntu-24.04-x86_64
+archive=3.14.7-ubuntu-24.04-x86_64.tar.xz
+dep=libbz2.so.1.0
+dep=libc.so.6
+dep=libcrypto.so.3
+dep=libffi.so.8
+dep=liblzma.so.5
+dep=libm.so.6
+dep=libncursesw.so.6
+dep=libpanelw.so.6
+dep=libreadline.so.8
+dep=libsqlite3.so.0
+dep=libssl.so.3
+dep=libtcl8.6.so
+dep=libtinfo.so.6
+dep=libtk8.6.so
+dep=libuuid.so.1
+dep=libz.so.1
+dep=libzstd.so.1
