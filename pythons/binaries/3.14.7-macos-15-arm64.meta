@@ -1,5 +1,6 @@
 # pyenv-binary metadata
 version=3.14.7-macos-15-arm64
+source_version=3.14.7
 os=Darwin
 arch=arm64
 platform=darwin-arm64

@@ -1,5 +1,6 @@
 # pyenv-binary metadata
 version=3.14.7-ubuntu-24.04-x86_64
+source_version=3.14.7
 os=Linux
 arch=x86_64
 platform=linux-x86_64

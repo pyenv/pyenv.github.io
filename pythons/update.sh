@@ -54,16 +54,38 @@ tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 list="$tmpdir/list"
 links="$tmpdir/links"
+index="$tmpdir/index.tsv"
 : > "$list"
 : > "$links"
+printf 'source_version\tentry\tos\tarch\tdistro\n' > "$index"
 
 for meta in binaries/*.meta; do
   [ -e "$meta" ] || continue
   name="$(basename "$meta" .meta)"
   archive="$(sed -n 's/^archive=//p' "$meta")"
+  source_version="$(sed -n 's/^source_version=//p' "$meta")"
+  os="$(sed -n 's/^os=//p' "$meta")"
+  arch="$(sed -n 's/^arch=//p' "$meta")"
+  distro="$(sed -n 's/^distro=//p' "$meta")"
+  if [ -z "$source_version" ]; then
+    echo "Missing source version in $meta" >&2
+    exit 1
+  fi
   case "$archive" in
   "" | *[!A-Za-z0-9._-]*)
     echo "Invalid archive name in $meta" >&2
+    exit 1
+    ;;
+  esac
+  for value in "$os" "$arch" "$distro"; do
+    if [ -z "$value" ]; then
+      echo "Missing platform metadata in $meta" >&2
+      exit 1
+    fi
+  done
+  case "$source_version:$name:$os:$arch:$distro" in
+  *$'\n'* | *$'\t'*)
+    echo "Invalid metadata in $meta" >&2
     exit 1
     ;;
   esac
@@ -73,6 +95,8 @@ for meta in binaries/*.meta; do
   fi
   sha="$(compute_sha2 < "binaries/$archive")"
   printf '%s\n%s\n' "$archive" "$sha" >> "$links"
+  printf '%s\t%s\t%s\t%s\t%s\n' \
+    "$source_version" "$name" "$os" "$arch" "$distro" >> "$index"
   printf '<li><a href="binaries/%s">%s</a> (<a href="binaries/%s">definition</a>)</li>\n' \
     "$archive" "$archive" "$name" >> "$list"
 done
@@ -103,5 +127,6 @@ awk -v list="$list" '
   !replacing { print }
 ' index.html > index.html.tmp
 mv index.html.tmp index.html
+cp "$index" binaries/index.tsv
 
 # vim:set ft=sh :
